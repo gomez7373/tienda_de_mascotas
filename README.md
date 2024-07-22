@@ -1,2 +1,2 @@
 # tienda_de_mascotas
-la tienda de mascotas contara con diversas mascotasy servicios de pedidos especiales.
+La tienda de mascotas contara con diversas mascotas y servicios de pedidos especiales.
