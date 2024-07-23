@@ -1,0 +1,49 @@
+<!-- templates/purchase.html -->
+<!-- Plantilla HTML para la página de compra -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Mascotas</title>
+    <!-- Enlace al archivo de estilo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Comprar Mascotas</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('purchase') }}">Comprar</a></li>
+            <li><a href="{{ url_for('payment') }}">Pagar</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section>
+            <h2>Seleccione su Mascota</h2>
+            <form id="purchaseForm">
+                <label for="animal">Tipo de Animal:</label>
+                <select id="animal" name="animal">
+                    <option value="perro">Perro</option>
+                    <option value="gato">Gato</option>
+                    <option value="pajaro">Pájaro</option>
+                    <option value="pez">Pez</option>
+                </select>
+                <label for="quantity">Cantidad:</label>
+                <input type="number" id="quantity" name="quantity" min="1" required>
+                <button type="submit">Comprar</button>
+            </form>
+            <div id="response"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Tienda de Mascotas. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Enlace al archivo de script JavaScript -->
+    <script src="{{ url_for('static', filename='js/purchase.js') }}"></script>
+</body>
+</html>

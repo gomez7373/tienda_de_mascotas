@@ -1,0 +1,44 @@
+<!-- templates/payment.html -->
+<!-- Plantilla HTML para la página de pago -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagar</title>
+    <!-- Enlace al archivo de estilo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Realizar Pago</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('purchase') }}">Comprar</a></li>
+            <li><a href="{{ url_for('payment') }}">Pagar</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section>
+            <h2>Información de Pago</h2>
+            <form id="paymentForm">
+                <label for="user_id">ID de Usuario:</label>
+                <input type="number" id="user_id" name="user_id" required>
+                <label for="amount">Monto:</label>
+                <input type="number" id="amount" name="amount" required>
+                <button type="submit">Pagar</button>
+            </form>
+            <div id="response"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Tienda de Mascotas. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Enlace al archivo de script JavaScript -->
+    <script src="{{ url_for('static', filename='js/payment.js') }}"></script>
+</body>
+</html>
