@@ -75,7 +75,7 @@ Este es un proyecto de una tienda de mascotas en línea que permite a los usuari
     python app.py
 2. Abre tu navegador y navega a http://localhost:5000 para ver la aplicación en acción.
 
-    # Estructura del Código
+# Estructura del Código
 - app.py: Archivo principal que inicializa y ejecuta la aplicación Flask.
 - config.py: Contiene la configuración de la aplicación.
 - base.py: Funciones comunes y utilidades.
