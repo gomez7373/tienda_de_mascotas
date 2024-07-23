@@ -1,0 +1,98 @@
+/* static/css/styles.css */
+/* Estilos básicos para la tienda de mascotas */
+
+/* Estilos para el cuerpo de la página */
+body {
+    font-family: Arial, sans-serif; /* Establece la fuente a Arial, sans-serif */
+    margin: 0; /* Elimina el margen por defecto del cuerpo */
+    padding: 0; /* Elimina el relleno por defecto del cuerpo */
+    background-color: #f4f4f4; /* Establece un color de fondo gris claro */
+}
+
+/* Estilos para el encabezado */
+header {
+    background-color: #4CAF50; /* Establece un color de fondo verde */
+    color: white; /* Establece el color del texto a blanco */
+    text-align: center; /* Centra el texto */
+    padding: 1em 0; /* Añade un relleno de 1em en la parte superior e inferior */
+}
+
+/* Estilos para la navegación */
+nav {
+    background-color: #333; /* Establece un color de fondo oscuro */
+    overflow: hidden; /* Asegura que el contenido no se desborde */
+}
+
+/* Estilos para la lista de navegación */
+nav ul {
+    list-style-type: none; /* Elimina los puntos de la lista */
+    margin: 0; /* Elimina el margen por defecto */
+    padding: 0; /* Elimina el relleno por defecto */
+}
+
+/* Estilos para los elementos de la lista de navegación */
+nav ul li {
+    float: left; /* Alinea los elementos de la lista a la izquierda */
+}
+
+/* Estilos para los enlaces de la navegación */
+nav ul li a {
+    display: block; /* Muestra el enlace como un bloque */
+    color: white; /* Establece el color del texto a blanco */
+    text-align: center; /* Centra el texto */
+    padding: 14px 20px; /* Añade un relleno de 14px arriba/abajo y 20px izquierda/derecha */
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+}
+
+/* Estilos para los enlaces de navegación al pasar el cursor */
+nav ul li a:hover {
+    background-color: #111; /* Cambia el color de fondo al pasar el cursor */
+}
+
+/* Estilos para el contenido principal */
+main {
+    padding: 20px; /* Añade un relleno de 20px alrededor del contenido principal */
+}
+
+/* Estilos para el pie de página */
+footer {
+    background-color: #333; /* Establece un color de fondo oscuro */
+    color: white; /* Establece el color del texto a blanco */
+    text-align: center; /* Centra el texto */
+    padding: 10px 0; /* Añade un relleno de 10px arriba/abajo */
+    position: fixed; /* Fija el pie de página en la parte inferior de la página */
+    bottom: 0; /* Establece la posición inferior a 0 */
+    width: 100%; /* Hace que el pie de página ocupe todo el ancho de la página */
+}
+
+/* Estilos para los formularios */
+form {
+    margin: 20px 0; /* Añade un margen de 20px arriba/abajo */
+}
+
+/* Estilos para las etiquetas de los formularios */
+form label {
+    display: block; /* Muestra la etiqueta como un bloque */
+    margin: 10px 0 5px; /* Añade un margen de 10px arriba, 0px izquierda/derecha y 5px abajo */
+}
+
+/* Estilos para los campos de entrada y selección de los formularios */
+form input, form select {
+    padding: 10px; /* Añade un relleno de 10px */
+    width: 100%; /* Hace que los campos ocupen todo el ancho del formulario */
+    box-sizing: border-box; /* Incluye el relleno y el borde en el ancho y alto totales del elemento */
+}
+
+/* Estilos para los botones de los formularios */
+form button {
+    background-color: #4CAF50; /* Establece un color de fondo verde */
+    color: white; /* Establece el color del texto a blanco */
+    border: none; /* Elimina el borde del botón */
+    padding: 10px 20px; /* Añade un relleno de 10px arriba/abajo y 20px izquierda/derecha */
+    cursor: pointer; /* Cambia el cursor a una mano apuntando */
+}
+
+/* Estilos para los botones de los formularios al pasar el cursor */
+form button:hover {
+    background-color: #45a049; /* Cambia el color de fondo al pasar el cursor */
+}

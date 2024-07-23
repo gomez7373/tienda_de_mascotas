@@ -1,49 +1,43 @@
 # app.py
 # Archivo principal para inicializar y ejecutar la aplicación Flask
 
-from flask import Flask, render_template  # Importa Flask y render_template de Flask
-from routes.user_routes import user_bp  # Importa el Blueprint de rutas de usuarios
-from routes.animal_routes import animal_bp  # Importa el Blueprint de rutas de animales
-import os  # Importa el módulo os para interactuar con el sistema operativo
-from config import DevelopmentConfig, ProductionConfig  # Importa las configuraciones de desarrollo y producción
+import os
+from flask import Flask, render_template, session
+from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
+from routes.user_routes import user_bp
+from routes.animal_routes import animal_bp
+from routes.payment_routes import payment_bp
+from config import DevelopmentConfig
+from dotenv import load_dotenv
 
-# Crear una instancia de la aplicación Flask
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
+
 app = Flask(__name__)
+app.config.from_object(DevelopmentConfig)
 
-# Configurar la aplicación Flask usando las variables de entorno
-if os.getenv('FLASK_ENV') == 'development':
-    app.config.from_object(DevelopmentConfig)  # Configuración para desarrollo
-else:
-    app.config.from_object(ProductionConfig)  # Configuración para producción
+# Imprimir las variables de entorno para verificar que están cargadas correctamente
+print(f"SECRET_KEY: {app.config['SECRET_KEY']}")
+print(f"DATABASE_URL: {app.config['SQLALCHEMY_DATABASE_URI']}")
+print(f"FLASK_ENV: {app.config['ENV']}")
 
-# Registrar los Blueprints para las rutas de usuarios y animales
-app.register_blueprint(user_bp)
-app.register_blueprint(animal_bp)
+# Inicializar la base de datos y las sesiones
+db = SQLAlchemy(app)
+Session(app)
+
+# Registrar Blueprints
+app.register_blueprint(user_bp, url_prefix='/users')
+app.register_blueprint(animal_bp, url_prefix='/animals')
+app.register_blueprint(payment_bp, url_prefix='/payments')
 
 @app.route('/')
 def index():
     """
-    Ruta para la página principal.
-    Renderiza la plantilla 'index.html'.
+    Ruta para la página de inicio.
     """
     return render_template('index.html')
 
-@app.route('/purchase')
-def purchase():
-    """
-    Ruta para la página de compra.
-    Renderiza la plantilla 'purchase.html'.
-    """
-    return render_template('purchase.html')
-
-@app.route('/payment')
-def payment():
-    """
-    Ruta para la página de pago.
-    Renderiza la plantilla 'payment.html'.
-    """
-    return render_template('payment.html')
-
-if __name__ == "__main__":
-    # Inicia la aplicación Flask en modo debug en el puerto 5000
-    app.run(debug=app.config['DEBUG'], port=5000)
+# Habilitar la ejecución de la aplicación Flask en modo debug
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)

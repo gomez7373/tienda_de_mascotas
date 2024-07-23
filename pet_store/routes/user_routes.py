@@ -1,54 +1,71 @@
 # routes/user_routes.py
 # Define las rutas para manejar las operaciones relacionadas con los usuarios
 
-from flask import Blueprint, request, jsonify  # Importa Blueprint, request y jsonify de Flask
-from controllers.user_controller import UserController  # Importa el controlador de usuarios
-from persistence.database import Database  # Importa la clase Database
-from persistence.json_persistence import JSONPersistence  # Importa la clase JSONPersistence
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, session
+from controllers.user_controller import UserController
+from persistence.database import Database
+from persistence.json_persistence import JSONPersistence
 
-# Crear un Blueprint para las rutas de usuarios
 user_bp = Blueprint('user_bp', __name__)
 
-# Instanciar la base de datos y el controlador de usuarios
 db = Database()
 json_db = JSONPersistence()
 user_controller = UserController(db, json_db)
 
+@user_bp.route('/register', methods=['GET'])
+def show_register():
+    """
+    Ruta para mostrar la página de registro.
+    """
+    return render_template('register.html')
+
 @user_bp.route('/register', methods=['POST'])
-def register():
+def register_user():
     """
     Ruta para registrar un nuevo usuario.
     Espera un JSON con los campos email, password, name y surname.
     """
-    data = request.json  # Obtener los datos JSON del request
+    data = request.json
     email = data['email']
     password = data['password']
     name = data['name']
     surname = data['surname']
-    user = user_controller.create_user(email, password, name, surname)  # Crear el usuario
-    return jsonify(user), 201  # Devolver el usuario creado y el código de estado 201 (Creado)
+    is_admin = data.get('is_admin', False)
+    user_controller.create_user(email, password, name, surname, is_admin)
+    return jsonify({"success": True}), 201
+
+@user_bp.route('/login', methods=['GET'])
+def show_login():
+    """
+    Ruta para mostrar la página de inicio de sesión.
+    """
+    return render_template('login.html')
 
 @user_bp.route('/login', methods=['POST'])
-def login():
+def login_user():
     """
     Ruta para autenticar un usuario.
     Espera un JSON con los campos email y password.
     """
-    data = request.json  # Obtener los datos JSON del request
+    data = request.json
     email = data['email']
     password = data['password']
-    user = user_controller.authenticate_user(email, password)  # Autenticar el usuario
-    if user:
-        return jsonify(user), 200  # Devolver el usuario autenticado y el código de estado 200 (OK)
-    return jsonify({"error": "Autenticación fallida"}), 401  # Devolver un error y el código de estado 401 (No autorizado)
+    response = user_controller.authenticate_user(email, password)
+    if response:
+        # Guardar los detalles del usuario en la sesión
+        session['user_id'] = response['id']
+        session['user_email'] = response['email']
+        session['user_name'] = response['name']
+        session['user_surname'] = response['surname']
+        session['is_admin'] = response['is_admin']
+        return redirect(url_for('user_bp.menu'))
+    return jsonify({"error": "Invalid credentials"}), 401
 
-@user_bp.route('/check-admin', methods=['POST'])
-def check_admin():
+@user_bp.route('/menu', methods=['GET'])
+def menu():
     """
-    Ruta para verificar si un usuario es administrador.
-    Espera un JSON con el campo email.
+    Ruta para mostrar el menú después de iniciar sesión.
     """
-    data = request.json  # Obtener los datos JSON del request
-    email = data['email']
-    is_admin = user_controller.check_admin(email)  # Verificar si el usuario es administrador
-    return jsonify({"is_admin": is_admin}), 200  # Devolver el resultado y el código de estado 200 (OK)
+    if 'user_id' not in session:
+        return redirect(url_for('user_bp.show_login'))
+    return render_template('menu.html', user=session)

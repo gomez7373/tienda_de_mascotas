@@ -1,25 +1,24 @@
 # routes/animal_routes.py
 # Define las rutas para manejar las operaciones relacionadas con los animales
 
-from flask import Blueprint, request, jsonify  # Importa Blueprint, request y jsonify de Flask
-from controllers.animal_controller import AnimalController  # Importa el controlador de animales
-from persistence.database import Database  # Importa la clase Database
-from persistence.json_persistence import JSONPersistence  # Importa la clase JSONPersistence
+from flask import Blueprint, request, jsonify, render_template
+from controllers.animal_controller import AnimalController
+from persistence.database import Database
+from persistence.json_persistence import JSONPersistence
 
-# Crear un Blueprint para las rutas de animales
 animal_bp = Blueprint('animal_bp', __name__)
 
-# Instanciar la base de datos y el controlador de animales
 db = Database()
 json_db = JSONPersistence()
 animal_controller = AnimalController(db, json_db)
 
-@animal_bp.route('/animals', methods=['GET'])
-def get_animals():
+@animal_bp.route('/inventory', methods=['GET'])
+def show_inventory():
     """
-    Ruta para obtener la lista de animales en la tienda.
+    Ruta para mostrar el inventario de animales.
     """
-    return jsonify(animal_controller.get_animals()), 200  # Devuelve la lista de animales y el código de estado 200 (OK)
+    animals = animal_controller.get_all_animals()
+    return render_template('inventory.html', animals=animals)
 
 @animal_bp.route('/buy', methods=['POST'])
 def buy_animal():
@@ -27,47 +26,32 @@ def buy_animal():
     Ruta para comprar un animal.
     Espera un JSON con los campos user_id, animal y quantity.
     """
-    data = request.json  # Obtener los datos JSON del request
+    data = request.json
     user_id = data['user_id']
-    response, status = animal_controller.buy_animal(user_id, data['animal'].lower(), data['quantity'])  # Realiza la compra del animal
-    return jsonify(response), status  # Devuelve el resultado de la compra y el código de estado correspondiente
+    animal = data['animal']
+    quantity = data['quantity']
+    response = animal_controller.buy_animal(user_id, animal, quantity)
+    return jsonify(response), 200
 
-@animal_bp.route('/add', methods=['POST'])
-def add_animal():
-    """
-    Ruta para agregar un nuevo animal a la tienda.
-    Espera un JSON con los campos animal y quantity.
-    """
-    data = request.json  # Obtener los datos JSON del request
-    response = animal_controller.add_animal(data['animal'].lower(), data['quantity'])  # Agrega el nuevo animal
-    return jsonify(response), 200  # Devuelve el animal agregado y el código de estado 200 (OK)
-
-@animal_bp.route('/request', methods=['POST'])
+@animal_bp.route('/request', methods=['GET', 'POST'])
 def request_animal():
     """
-    Ruta para solicitar un animal no disponible actualmente.
-    Espera un JSON con los campos user_id, animal y phone.
+    Ruta para solicitar un animal que no está disponible en la tienda.
     """
-    data = request.json  # Obtener los datos JSON del request
-    response = animal_controller.request_animal(data['user_id'], data['animal'], data['phone'])  # Realiza la solicitud del animal
-    return jsonify(response), 201  # Devuelve la solicitud realizada y el código de estado 201 (Creado)
+    if request.method == 'POST':
+        data = request.form
+        user_id = data['user_id']
+        animal_name = data['animal_name']
+        phone = data['phone']
+        response = animal_controller.request_animal(user_id, animal_name, phone)
+        return jsonify(response), 201
+    return render_template('request.html')
 
-@animal_bp.route('/purchase_history/<int:user_id>', methods=['GET'])
-def get_purchase_history(user_id):
+@animal_bp.route('/history', methods=['GET'])
+def get_purchase_history():
     """
-    Ruta para obtener el historial de compras de un usuario específico.
-    :param user_id: ID del usuario
+    Ruta para obtener el historial de compras.
     """
-    return jsonify(animal_controller.get_purchase_history(user_id)), 200  # Devuelve el historial de compras del usuario y el código de estado 200 (OK)
-
-@animal_bp.route('/pay', methods=['POST'])
-def make_payment():
-    """
-    Ruta para realizar un pago.
-    Espera un JSON con los campos user_id y amount.
-    """
-    data = request.json  # Obtener los datos JSON del request
-    user_id = data['user_id']
-    amount = data['amount']
-    response = animal_controller.make_payment(user_id, amount)  # Realiza el pago
-    return jsonify(response), 200  # Devuelve el resultado del pago y el código de estado 200 (OK)
+    user_id = request.args.get('user_id')
+    history = animal_controller.get_purchase_history(user_id)
+    return jsonify(history), 200

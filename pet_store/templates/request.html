@@ -1,0 +1,31 @@
+<!-- templates/request.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Animal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Solicitar Animal</h1>
+    </header>
+    <main>
+        <form id="requestForm" method="POST" action="{{ url_for('animal_bp.request_animal') }}">
+            <label for="user_id">ID de Usuario:</label>
+            <input type="text" id="user_id" name="user_id" required><br>
+            <label for="animal_name">Nombre del Animal:</label>
+            <input type="text" id="animal_name" name="animal_name" required><br>
+            <label for="phone">Número de Teléfono:</label>
+            <input type="text" id="phone" name="phone" required><br>
+            <button type="submit">Enviar Solicitud</button>
+        </form>
+        <div id="response"></div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Tienda de Mascotas. Todos los derechos reservados.</p>
+    </footer>
+    <script src="{{ url_for('static', filename='js/request.js') }}"></script>
+</body>
+</html>

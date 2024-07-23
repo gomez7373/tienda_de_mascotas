@@ -1,12 +1,13 @@
-# tests/test_request.py
-# Archivo de pruebas para la funcionalidad del modelo de solicitudes
+# tests/test_payment.py
+# Archivo de pruebas para la funcionalidad del modelo de pagos
 
 import unittest  # Importa el módulo unittest para realizar las pruebas
-from models.request import Request  # Importa la clase Request desde el módulo models.request
+from models.payment import Payment  # Importa la clase Payment desde el módulo models.payment
 from persistence.database import Database  # Importa la clase Database
 from persistence.json_persistence import JSONPersistence  # Importa la clase JSONPersistence
+from datetime import datetime  # Importa el módulo datetime para manejar fechas
 
-class TestRequestModel(unittest.TestCase):
+class TestPaymentModel(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """
@@ -15,31 +16,33 @@ class TestRequestModel(unittest.TestCase):
         cls.db = Database(":memory:")  # Crea una base de datos en memoria para las pruebas
         cls.json_db = JSONPersistence("test_data.json")  # Crea un archivo JSON temporal para las pruebas
 
-    def test_create_request(self):
+    def test_create_payment(self):
         """
-        Prueba la creación de una nueva solicitud.
+        Prueba la creación de un nuevo pago.
         """
         user_id = 1
-        animal = "camaleón"
-        phone = "1234567890"
-        request = Request(user_id, animal, phone)
-        request.save(self.db, self.json_db)
+        amount = 100.0
+        payment_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        payment_status = "completado"
+        payment = Payment(user_id, amount, payment_date, payment_status)
+        payment.save(self.db, self.json_db)
         
-        self.db.cursor.execute("SELECT * FROM requests WHERE user_id = ? AND animal = ?", (user_id, animal))
+        self.db.cursor.execute("SELECT * FROM payments WHERE user_id = ? AND amount = ?", (user_id, amount))
         result = self.db.cursor.fetchone()
         
         self.assertIsNotNone(result)
         self.assertEqual(result[1], user_id)
-        self.assertEqual(result[2], animal)
-        self.assertEqual(result[3], phone)
+        self.assertEqual(result[2], amount)
+        self.assertEqual(result[3], payment_date)
+        self.assertEqual(result[4], payment_status)
 
-    def test_get_requests_by_user(self):
+    def test_get_payments_by_user(self):
         """
-        Prueba la obtención de todas las solicitudes de un usuario específico.
+        Prueba la obtención de todos los pagos de un usuario específico.
         """
         user_id = 1
-        requests = Request.get_by_user(self.db, user_id)
-        self.assertIsInstance(requests, list)
+        payments = Payment.get_by_user(self.db, user_id)
+        self.assertIsInstance(payments, list)
 
     @classmethod
     def tearDownClass(cls):

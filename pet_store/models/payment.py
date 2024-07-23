@@ -1,21 +1,19 @@
 # models/payment.py
-# Define el modelo de datos para los pagos
-
-from persistence.json_persistence import JSONPersistence  # Importa la clase JSONPersistence para la persistencia en archivos JSON
+# Modelo para los pagos, define las operaciones y la estructura de los datos de los pagos
 
 class Payment:
     def __init__(self, user_id, amount, payment_date, payment_status):
         """
-        Inicializa un nuevo pago con los detalles proporcionados.
+        Inicializa un nuevo pago.
         :param user_id: ID del usuario que realiza el pago
         :param amount: Monto del pago
         :param payment_date: Fecha del pago
-        :param payment_status: Estado del pago (ej. 'completado', 'pendiente')
+        :param payment_status: Estado del pago
         """
-        self.user_id = user_id  # Almacena el ID del usuario
-        self.amount = amount  # Almacena el monto del pago
-        self.payment_date = payment_date  # Almacena la fecha del pago
-        self.payment_status = payment_status  # Almacena el estado del pago
+        self.user_id = user_id  # ID del usuario
+        self.amount = amount  # Monto del pago
+        self.payment_date = payment_date  # Fecha del pago
+        self.payment_status = payment_status  # Estado del pago
 
     def save(self, db, json_db=None):
         """
@@ -27,9 +25,10 @@ class Payment:
             "INSERT INTO payments (user_id, amount, payment_date, payment_status) VALUES (?, ?, ?, ?)",
             (self.user_id, self.amount, self.payment_date, self.payment_status)
         )
-        db.connection.commit()  # Guardar cambios en la base de datos
+        db.connection.commit()
         if json_db:
-            json_db.append("payments", self.to_dict())  # Guardar en JSON si se proporciona
+            data = self.to_dict()
+            json_db.append("payments", data)
 
     @staticmethod
     def get_by_user(db, user_id):
@@ -37,19 +36,20 @@ class Payment:
         Obtiene todos los pagos de un usuario específico.
         :param db: Conexión a la base de datos
         :param user_id: ID del usuario
-        :return: Lista de pagos realizados por el usuario
+        :return: Lista de instancias de Payment
         """
         db.cursor.execute("SELECT * FROM payments WHERE user_id = ?", (user_id,))
-        return db.cursor.fetchall()  # Obtener todos los pagos del usuario
+        rows = db.cursor.fetchall()
+        return [Payment(row[1], row[2], row[3], row[4]) for row in rows]
 
     def to_dict(self):
         """
-        Convierte el objeto Payment a un diccionario.
+        Convierte la instancia de Payment a un diccionario.
         :return: Diccionario con los datos del pago
         """
         return {
-            "user_id": self.user_id,  # ID del usuario que realizó el pago
-            "amount": self.amount,  # Monto del pago
-            "payment_date": self.payment_date,  # Fecha del pago
-            "payment_status": self.payment_status  # Estado del pago
+            "user_id": self.user_id,
+            "amount": self.amount,
+            "payment_date": self.payment_date,
+            "payment_status": self.payment_status
         }

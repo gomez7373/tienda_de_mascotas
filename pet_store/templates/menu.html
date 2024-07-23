@@ -1,0 +1,32 @@
+<!-- templates/menu.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Principal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Bienvenido, {{ user.user_name }} {{ user.user_surname }}</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('user_bp.menu') }}">Menú Principal</a></li>
+            <li><a href="{{ url_for('animal_bp.show_inventory') }}">Ver Inventario</a></li>
+            <li><a href="{{ url_for('animal_bp.request_animal') }}">Solicitar Animal</a></li>
+            <li><a href="{{ url_for('user_bp.show_login') }}">Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section>
+            <h2>Menú Principal</h2>
+            <p>Selecciona una opción del menú para continuar.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Tienda de Mascotas. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

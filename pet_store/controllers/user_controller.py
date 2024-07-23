@@ -1,10 +1,10 @@
 # controllers/user_controller.py
 # Controlador para manejar la lógica relacionada con los usuarios
 
-from models.user import User  # Importa la clase User desde el módulo models.user
-from persistence.database import Database  # Importa la clase Database desde el módulo persistence.database
-from persistence.json_persistence import JSONPersistence  # Importa la clase JSONPersistence desde el módulo persistence.json_persistence
-from base import hash_password, check_password  # Importa las funciones hash_password y check_password
+from models.user import User
+from persistence.database import Database
+from persistence.json_persistence import JSONPersistence
+from base import hash_password, check_password  # Asegúrate de importar check_password aquí también
 
 class UserController:
     def __init__(self, db: Database, json_db: JSONPersistence = None):
@@ -13,8 +13,8 @@ class UserController:
         :param db: Conexión a la base de datos
         :param json_db: (Opcional) Persistencia en JSON
         """
-        self.db = db  # Almacena la conexión a la base de datos
-        self.json_db = json_db  # Almacena la persistencia en JSON si se proporciona
+        self.db = db
+        self.json_db = json_db
 
     def create_user(self, email, password, name, surname, is_admin=False):
         """
@@ -26,10 +26,10 @@ class UserController:
         :param is_admin: Booleano indicando si el usuario es administrador (False por defecto)
         :return: Diccionario con los datos del usuario creado
         """
-        hashed_password = hash_password(password)  # Hashea la contraseña antes de guardarla
-        user = User(email, hashed_password, name, surname, is_admin)  # Crea una nueva instancia de User
-        user.save(self.db, self.json_db)  # Guarda el usuario en la base de datos (y en JSON si se proporciona)
-        return user.to_dict()  # Devuelve un diccionario con los datos del usuario creado
+        hashed_password = hash_password(password)
+        user = User(email, hashed_password, name, surname, is_admin)
+        user.save(self.db, self.json_db)
+        return user.to_dict()
 
     def authenticate_user(self, email, password):
         """
@@ -38,16 +38,16 @@ class UserController:
         :param password: Contraseña del usuario
         :return: Diccionario con los datos del usuario autenticado o None si la autenticación falla
         """
-        user = User.authenticate(self.db, email, password)  # Autentica el usuario
-        if user and check_password(user[2], password):  # Verifica la contraseña hash
+        user = User.authenticate(self.db, email, password)
+        if user:
             return {
-                "id": user[0],  # ID del usuario
-                "email": user[1],  # Email del usuario
-                "name": user[3],  # Nombre del usuario
-                "surname": user[4],  # Apellido del usuario
-                "is_admin": bool(user[5])  # Indica si el usuario es administrador
+                "id": user[0],
+                "email": user[1],
+                "name": user[3],
+                "surname": user[4],
+                "is_admin": bool(user[5])
             }
-        return None  # Devuelve None si la autenticación falla
+        return None
 
     def check_admin(self, email):
         """
@@ -55,4 +55,4 @@ class UserController:
         :param email: Email del usuario
         :return: Booleano indicando si el usuario es administrador
         """
-        return User.is_admin(self.db, email)  # Verifica si el usuario es administrador y devuelve el resultado
+        return User.is_admin(self.db, email)
