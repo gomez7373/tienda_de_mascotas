@@ -5,7 +5,7 @@ commando:
 
 $ sqlite3 path_to_your_database.db
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Breve tutorial sobre cómo usar sqlite3 para ver y manipular tu base de datos:
 
@@ -21,7 +21,7 @@ $ sqlite3 pet_store.db
 
 Paso 2: Comandos Básicos de sqlite3:
 
-====================================
+----------------------------------------------------------------------------------------------------------------
 
 Una vez dentro de la CLI de sqlite3, puedes usar los siguientes comandos para interactuar con tu base de datos:
 
@@ -94,8 +94,6 @@ Copy code
 .exit
 
 ----------------------------------------------------------------------------------------------------------------
-
-================================================================================================================
 
 Ejemplo de Uso
 Supongamos que tienes una tabla llamada users. Aquí hay algunos comandos que podrías ejecutar:
